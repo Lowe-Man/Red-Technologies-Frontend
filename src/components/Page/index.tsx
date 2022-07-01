@@ -9,7 +9,7 @@ interface IProps {
 
 export default function Page(props: IProps) {
     const { headerTitle, children } = props;
-    return <div style={{ width: "100vw", height: "100vh", position: "relative" }}>
+    return <div style={{ width: "100%", height: "100vh", position: "relative" }}>
         <Header label={headerTitle}/>
         <div style={{ position: "relative", padding: layout.standardComponentPadding }}>{children}</div>
     </div>
