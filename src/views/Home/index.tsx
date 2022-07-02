@@ -107,10 +107,13 @@ export default function Home() {
             </FormControl>
         </div>
         <MaterialTable
-            title="Basic Filtering Preview"
+            title="Current Orders"
             icons={tableIcons}
             columns={columns}
             data={data}
+            options={{
+                search: false
+            }}
             editable={{
                 onRowUpdate: (newData, oldData) =>
                     new Promise((resolve) => {
