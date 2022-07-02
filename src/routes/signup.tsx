@@ -9,8 +9,24 @@ export default function Signup() {
 
     const submitForm = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        console.log(name, email, password);
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
 
+        const raw = JSON.stringify({
+            "Email": email,
+            "FullName": name,
+            "Password": password
+        });
+
+        fetch("https://localhost:5001/api/users", {
+            method: 'POST',
+            headers: myHeaders,
+            body: raw,
+            redirect: 'follow'
+        })
+            .then(response => response.json())
+            .then(result => console.log(result))
+            .catch(error => console.log('error', error));
     }
 
     return (<Page headerTitle={"Signup"}>
