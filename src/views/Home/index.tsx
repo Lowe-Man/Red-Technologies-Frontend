@@ -19,6 +19,7 @@ import Remove from '@material-ui/icons/Remove';
 import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
+import {getAllOrders} from "../../services/order";
 
 const tableIcons: Icons = {
     Add: forwardRef((props, ref) => <AddBox {...props} ref={ref}/>),
@@ -68,19 +69,16 @@ export default function Home() {
 
     const [data, setData] = useState([])
     const columns = [
-        {title: "ID", field: "id"},
-        {title: "Username", field: "username"},
-        {title: "Name", field: "name"},
-        {title: "Email", field: "email"},
-        {title: "Phone", field: "phone"},
-        {title: "Web Link", field: 'website'}
+        {title: "Order ID", field: "Id"},
+        {title: "Creation Date", field: "CreatedDate"},
+        {title: "Created By", field: "CreatedByUserName"},
+        {title: "Order Type", field: "OrderType"},
+        {title: "Customer", field: "CustomerName"},
     ]
     useEffect(() => {
-        fetch("https://jsonplaceholder.typicode.com/users")
-            .then(resp => resp.json())
-            .then(resp => {
-                setData(resp)
-            })
+        getAllOrders().then(res => {
+            setData(res);
+        })
     }, [])
 
     return <Page headerTitle={"Home"}>

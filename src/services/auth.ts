@@ -46,6 +46,7 @@ export function login(email: string, password: string): object {
             if (result.token) {
                 localStorage.setItem("user", result.token);
             }
+            console.log(localStorage.getItem("user"));
             return result.token;
         })
         .catch(error => console.log('error', error));
@@ -55,13 +56,10 @@ export function logout(): void {
     localStorage.removeItem("user");
 }
 
-export function authHeader(): object {
-    // return authorization header with jwt token
+export function authToken(): string {
     let user = localStorage.getItem("user");
-    if (user) {
-        return {
-            authorization: `Bearer ${user}`
-        };
+    if (user !== null) {
+        return `Bearer ${user}`;
     }
-    return {};
+    return "";
 }
