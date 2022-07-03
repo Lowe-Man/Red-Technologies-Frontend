@@ -13,7 +13,17 @@ export function getAllOrders() {
     })
         .then(response => response.json())
         .then(result => {
-            return result;
+            return result.map((order: { CreatedDate: any; Id: any; CreatedByUserName: any; OrderType: any; CustomerName: any; }) => {
+                const date = order.CreatedDate;
+                const local = new Date(date).toLocaleString();
+                return {
+                    Id: order.Id,
+                    CreatedDate: local,
+                    CreatedByUserName: order.CreatedByUserName,
+                    OrderType: order.OrderType,
+                    CustomerName: order.CustomerName,
+                }
+            });
         })
         .catch(error => console.log('error', error));
 }
@@ -30,7 +40,17 @@ export function getOrder(id: number) {
     })
         .then(response => response.json())
         .then(result => {
-            return result.data;
+            return result.map((order: { CreatedDate: any; Id: any; CreatedByUserName: any; OrderType: any; CustomerName: any; }) => {
+                const date = order.CreatedDate;
+                const local = new Date(date).toLocaleString();
+                return {
+                    Id: order.Id,
+                    CreatedDate: local,
+                    CreatedByUserName: order.CreatedByUserName,
+                    OrderType: order.OrderType,
+                    CustomerName: order.CustomerName,
+                }
+            });
         })
         .catch(error => console.log('error', error));
 }
@@ -49,7 +69,7 @@ export function createOrder(order: object) {
     })
         .then(response => response.json())
         .then(result => {
-            return result.data;
+            return result;
         })
         .catch(error => console.log('error', error));
 }
@@ -68,7 +88,7 @@ export function updateOrder(id: number, order: object) {
     })
         .then(response => response.json())
         .then(result => {
-            return result.data;
+            return result;
         })
         .catch(error => console.log('error', error));
 }
@@ -85,7 +105,7 @@ export function deleteOrder(id: number) {
     })
         .then(response => response.json())
         .then(result => {
-            return result.data;
+            return result;
         })
         .catch(error => console.log('error', error));
 }
