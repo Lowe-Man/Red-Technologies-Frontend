@@ -110,7 +110,8 @@ export default function Home() {
             columns={columns}
             data={data}
             options={{
-                search: false
+                search: false,
+                paging: false
             }}
             editable={{
                 onRowUpdate: (newData, oldData) =>
