@@ -19,7 +19,7 @@ import Remove from '@material-ui/icons/Remove';
 import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
-import {getAllOrders} from "../../services/order";
+import {createOrder, getAllOrders} from "../../services/order";
 
 const tableIcons: Icons = {
     Add: forwardRef((props, ref) => <AddBox {...props} ref={ref}/>),
@@ -57,24 +57,10 @@ export default function Home() {
     }
 
     const handleRowAdd = (newData: any, resolve: any) => {
-        //validation
-        let errorList = []
-        if (newData.first_name === undefined) {
-            errorList.push("Please enter first name")
-        }
-        if (newData.last_name === undefined) {
-            errorList.push("Please enter last name")
-        }
+        // createOrder()
     }
 
     const [data, setData] = useState([])
-    const columns = [
-        {title: "Order ID", field: "Id"},
-        {title: "Creation Date", field: "CreatedDate"},
-        {title: "Created By", field: "CreatedByUserName"},
-        {title: "Order Type", field: "OrderType"},
-        {title: "Customer", field: "CustomerName"},
-    ]
     useEffect(() => {
         getAllOrders().then(res => {
             setData(res);
@@ -105,11 +91,18 @@ export default function Home() {
         <MaterialTable
             title="Current Orders"
             icons={tableIcons}
-            columns={columns}
+            columns={[
+                {title: "Order ID", field: "Id", editable: "never"},
+                {title: "Creation Date", field: "CreatedDate"},
+                {title: "Created By", field: "CreatedByUserName"},
+                {title: "Order Type", field: "OrderType"},
+                {title: "Customer", field: "CustomerName"},
+            ]}
             data={data}
             options={{
                 search: false,
-                paging: false
+                paging: false,
+                actionsColumnIndex: -1
             }}
             editable={{
                 onRowUpdate: (newData, oldData) =>
