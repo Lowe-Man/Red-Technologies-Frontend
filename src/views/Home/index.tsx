@@ -1,9 +1,8 @@
 import React, {forwardRef, useEffect, useState} from "react";
 import Page from "../../components/Page";
-import {Icons} from 'material-table';
+import MaterialTable, {Icons} from 'material-table';
 import {MDBBtn, MDBInputGroup} from "mdb-react-ui-kit";
 import {FormControl, InputLabel, MenuItem, Select, SelectChangeEvent} from "@mui/material";
-import MaterialTable from "material-table";
 import AddBox from '@material-ui/icons/AddBox';
 import ArrowDownward from '@material-ui/icons/ArrowDownward';
 import Check from '@material-ui/icons/Check';
@@ -42,7 +41,8 @@ const tableIcons: Icons = {
 };
 
 export default function Home() {
-    const [order, setOrder] = React.useState('');
+    const [order, setOrder] = useState('');
+    const [data, setData] = useState([])
     const [selectedRows, setSelectedRows] = useState([])
 
     const handleChange = (event: SelectChangeEvent) => {
@@ -57,10 +57,20 @@ export default function Home() {
     }
 
     const handleRowAdd = (newData: any, resolve: any) => {
-        // createOrder()
+        newData.CreatedDate = new Date().toISOString();
+        createOrder(newData).then(r => {
+            return r;
+        }).then(r => {
+            let result = r;
+            result.CreatedDate = new Date(result.CreatedDate).toLocaleString();
+            const dataToAdd: any = [...data, result];
+            setData(dataToAdd);
+            resolve(r);
+        }).catch(e => {
+            console.log(e);
+        });
     }
 
-    const [data, setData] = useState([])
     useEffect(() => {
         getAllOrders().then(res => {
             setData(res);
@@ -93,7 +103,7 @@ export default function Home() {
             icons={tableIcons}
             columns={[
                 {title: "Order ID", field: "Id", editable: "never"},
-                {title: "Creation Date", field: "CreatedDate"},
+                {title: "Creation Date", field: "CreatedDate", editable: "never"},
                 {title: "Created By", field: "CreatedByUserName"},
                 {title: "Order Type", field: "OrderType"},
                 {title: "Customer", field: "CustomerName"},

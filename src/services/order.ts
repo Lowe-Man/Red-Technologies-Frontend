@@ -1,31 +1,27 @@
 import {API_URL, authToken} from "./auth";
 
-export function getAllOrders() {
+export async function getAllOrders() {
     const auth = authToken();
-    console.log(auth);
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
     myHeaders.append("Authorization", auth);
-    return fetch(`${API_URL}/orders`, {
+    const response = await fetch(`${API_URL}/orders`, {
         method: 'GET',
         headers: myHeaders,
         redirect: 'follow'
-    })
-        .then(response => response.json())
-        .then(result => {
-            return result.map((order: { CreatedDate: any; Id: any; CreatedByUserName: any; OrderType: any; CustomerName: any; }) => {
-                const date = order.CreatedDate;
-                const local = new Date(date).toLocaleString();
-                return {
-                    Id: order.Id,
-                    CreatedDate: local,
-                    CreatedByUserName: order.CreatedByUserName,
-                    OrderType: order.OrderType,
-                    CustomerName: order.CustomerName,
-                }
-            });
-        })
-        .catch(error => console.log('error', error));
+    });
+    const result = await response.json();
+    return result.map((order: { CreatedDate: any; Id: any; CreatedByUserName: any; OrderType: any; CustomerName: any; }) => {
+        const date = order.CreatedDate + "Z";
+        const local = new Date(date).toLocaleString();
+        return {
+            Id: order.Id,
+            CreatedDate: local,
+            CreatedByUserName: order.CreatedByUserName,
+            OrderType: order.OrderType,
+            CustomerName: order.CustomerName,
+        }
+    });
 }
 
 export function getOrder(id: number) {
@@ -55,23 +51,19 @@ export function getOrder(id: number) {
         .catch(error => console.log('error', error));
 }
 
-export function createOrder(order: object) {
+export async function createOrder(order: object) {
     const myHeaders = new Headers();
     const auth = authToken();
     myHeaders.append("Content-Type", "application/json");
     myHeaders.append("Authorization", auth);
     const raw = JSON.stringify(order);
-    return fetch(`${API_URL}/orders`, {
+    const response = await fetch(`${API_URL}/orders`, {
         method: 'POST',
         headers: myHeaders,
         body: raw,
         redirect: 'follow'
-    })
-        .then(response => response.json())
-        .then(result => {
-            return result;
-        })
-        .catch(error => console.log('error', error));
+    });
+    return response.json();
 }
 
 export function updateOrder(id: number, order: object) {
