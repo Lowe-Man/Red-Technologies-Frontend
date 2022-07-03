@@ -1,8 +1,6 @@
 import React, {forwardRef, useEffect, useState} from "react";
 import Page from "../../components/Page";
-import { Icons } from 'material-table';
-import BasicTable from "../../components/Table";
-import UserDropDown from "../../components/UserDropDown";
+import {Icons} from 'material-table';
 import {MDBBtn, MDBInputGroup} from "mdb-react-ui-kit";
 import {FormControl, InputLabel, MenuItem, Select, SelectChangeEvent} from "@mui/material";
 import MaterialTable from "material-table";
@@ -23,23 +21,23 @@ import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
 
 const tableIcons: Icons = {
-    Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
-    Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
-    Clear: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
-    Delete: forwardRef((props, ref) => <DeleteOutline {...props} ref={ref} />),
-    DetailPanel: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
-    Edit: forwardRef((props, ref) => <Edit {...props} ref={ref} />),
-    Export: forwardRef((props, ref) => <SaveAlt {...props} ref={ref} />),
-    Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
-    FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
-    LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} />),
-    NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
-    PreviousPage: forwardRef((props, ref) => <ChevronLeft {...props} ref={ref} />),
-    ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
-    Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
-    SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />),
-    ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref} />),
-    ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
+    Add: forwardRef((props, ref) => <AddBox {...props} ref={ref}/>),
+    Check: forwardRef((props, ref) => <Check {...props} ref={ref}/>),
+    Clear: forwardRef((props, ref) => <Clear {...props} ref={ref}/>),
+    Delete: forwardRef((props, ref) => <DeleteOutline {...props} ref={ref}/>),
+    DetailPanel: forwardRef((props, ref) => <ChevronRight {...props} ref={ref}/>),
+    Edit: forwardRef((props, ref) => <Edit {...props} ref={ref}/>),
+    Export: forwardRef((props, ref) => <SaveAlt {...props} ref={ref}/>),
+    Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref}/>),
+    FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref}/>),
+    LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref}/>),
+    NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref}/>),
+    PreviousPage: forwardRef((props, ref) => <ChevronLeft {...props} ref={ref}/>),
+    ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref}/>),
+    Search: forwardRef((props, ref) => <Search {...props} ref={ref}/>),
+    SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref}/>),
+    ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref}/>),
+    ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref}/>)
 };
 
 export default function Home() {
@@ -60,22 +58,22 @@ export default function Home() {
     const handleRowAdd = (newData: any, resolve: any) => {
         //validation
         let errorList = []
-        if(newData.first_name === undefined){
+        if (newData.first_name === undefined) {
             errorList.push("Please enter first name")
         }
-        if(newData.last_name === undefined){
+        if (newData.last_name === undefined) {
             errorList.push("Please enter last name")
         }
     }
 
     const [data, setData] = useState([])
     const columns = [
-        { title: "ID", field: "id" },
-        { title: "Username", field: "username" },
-        { title: "Name", field: "name" },
-        { title: "Email", field: "email" },
-        { title: "Phone", field: "phone" },
-        { title: "Web Link", field: 'website' }
+        {title: "ID", field: "id"},
+        {title: "Username", field: "username"},
+        {title: "Name", field: "name"},
+        {title: "Email", field: "email"},
+        {title: "Phone", field: "phone"},
+        {title: "Web Link", field: 'website'}
     ]
     useEffect(() => {
         fetch("https://jsonplaceholder.typicode.com/users")

@@ -1,32 +1,16 @@
 import Page from "../components/Page";
-import {MDBBtn, MDBCol, MDBContainer, MDBInput, MDBRow} from "mdb-react-ui-kit";
-import React, {FormEvent, useRef} from "react";
+import {MDBBtn, MDBInput} from "mdb-react-ui-kit";
+import {FormEvent, useState} from "react";
+import {signup} from "../services/auth";
 
 export default function Signup() {
-    const [name, setName] = React.useState("");
-    const [email, setEmail] = React.useState("");
-    const [password, setPassword] = React.useState("");
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
 
     const submitForm = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        const myHeaders = new Headers();
-        myHeaders.append("Content-Type", "application/json");
-
-        const raw = JSON.stringify({
-            "Email": email,
-            "FullName": name,
-            "Password": password
-        });
-
-        fetch("https://localhost:5001/api/users", {
-            method: 'POST',
-            headers: myHeaders,
-            body: raw,
-            redirect: 'follow'
-        })
-            .then(response => response.json())
-            .then(result => console.log(result))
-            .catch(error => console.log('error', error));
+        signup(name, email, password);
     }
 
     return (<Page headerTitle={"Signup"}>
