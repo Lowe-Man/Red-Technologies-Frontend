@@ -18,7 +18,7 @@ import Remove from '@material-ui/icons/Remove';
 import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
-import {createOrder, getAllOrders, HttpError, searchForOrder} from "../../services/order";
+import {createOrder, deleteOrder, getAllOrders, HttpError, searchForOrder} from "../../services/order";
 
 const tableIcons: Icons = {
     Add: forwardRef((props, ref) => <AddBox {...props} ref={ref}/>),
@@ -73,6 +73,13 @@ export default function Home() {
     }
 
     const handleRowDelete = (oldData: any, resolve: any) => {
+        deleteOrder(oldData.Id).then(r => {
+            const dataDelete = [...data];
+            const index = oldData.tableData.Id;
+            dataDelete.splice(index, 1);
+            setData([...dataDelete]);
+            resolve(r);
+        })
     }
 
     const handleRowAdd = (newData: any, resolve: any) => {
