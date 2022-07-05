@@ -1,4 +1,4 @@
-export const API_URL = "https://localhost:5001/api";
+export const API_URL = "http://localhost:5000/api";
 
 export function signup(name: string, email: string, password: string): object {
     const myHeaders = new Headers();
@@ -46,7 +46,6 @@ export function login(email: string, password: string): object {
             if (result.token) {
                 localStorage.setItem("user", result.token);
             }
-            console.log(localStorage.getItem("user"));
             return result.token;
         })
         .catch(error => console.log('error', error));

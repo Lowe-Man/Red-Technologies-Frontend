@@ -1,7 +1,7 @@
 import React, {forwardRef, useEffect, useState} from "react";
 import Page from "../../components/Page";
 import MaterialTable, {Icons} from 'material-table';
-import {MDBBtn, MDBInputGroup} from "mdb-react-ui-kit";
+import {MDBBtn, MDBInput, MDBInputGroup} from "mdb-react-ui-kit";
 import {FormControl, InputLabel, MenuItem, Select, SelectChangeEvent} from "@mui/material";
 import AddBox from '@material-ui/icons/AddBox';
 import ArrowDownward from '@material-ui/icons/ArrowDownward';
@@ -18,7 +18,7 @@ import Remove from '@material-ui/icons/Remove';
 import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
-import {createOrder, getAllOrders} from "../../services/order";
+import {createOrder, getAllOrders, HttpError, searchForOrder} from "../../services/order";
 
 const tableIcons: Icons = {
     Add: forwardRef((props, ref) => <AddBox {...props} ref={ref}/>),
@@ -42,12 +42,31 @@ const tableIcons: Icons = {
 
 export default function Home() {
     const [order, setOrder] = useState('');
+    const [id, setId] = useState('');
+    const [customer, setCustomer] = useState('');
     const [data, setData] = useState([])
-    const [selectedRows, setSelectedRows] = useState([])
+    const [customersearch, setCustomersearch] = useState([])
 
-    const handleChange = (event: SelectChangeEvent) => {
+    const uniqueCustomers: Array<any> = customersearch.map(order => order["CustomerName"]).filter((value, index, self) => self.indexOf(value) === index);
+
+    const handleOrderChange = (event: SelectChangeEvent) => {
         setOrder(event.target.value as string);
     };
+
+    const handleIdChange = (event: SelectChangeEvent) => {
+        setId(event.target.value as string);
+    };
+
+    const handleCustomerChange = (event: SelectChangeEvent) => {
+        setCustomer(event.target.value as string);
+    };
+
+    const handleOnSearch = (event: any) => {
+        searchForOrder(customer, order).then(r => {
+            setData(r);
+        })
+    };
+
 
     const handleRowUpdate = (newData: any, oldData: any, resolve: (value: any) => void) => {
 
@@ -74,27 +93,47 @@ export default function Home() {
     useEffect(() => {
         getAllOrders().then(res => {
             setData(res);
+            setCustomersearch(res)
+        }).catch(e => {
+            return e;
         })
     }, [])
 
     return <Page headerTitle={"Home"}>
         <div className="customFormGroup">
             <MDBInputGroup className='mb-3'>
-                <MDBBtn outline>Search</MDBBtn>
-                <input className='form-control' type='text'/>
+                <MDBBtn outline onClick={handleOnSearch}>Search</MDBBtn>
+                <MDBInput label='Search by ID' id='formControlIdField' type='text' onBlur={handleIdChange}/>
             </MDBInputGroup>
-            <FormControl fullWidth>
+            <FormControl sx={{m: 1, minWidth: 120}} size="small">
                 <InputLabel id="order-type-select-label">Order Type</InputLabel>
                 <Select
                     labelId="order-type-select-label"
                     id="order-type-simple-select"
                     value={order}
                     label="Order Type"
-                    onChange={handleChange}
+                    onChange={handleOrderChange}
                 >
-                    <MenuItem value={10}>Ten</MenuItem>
-                    <MenuItem value={20}>Twenty</MenuItem>
-                    <MenuItem value={30}>Thirty</MenuItem>
+                    <MenuItem value="nul">All</MenuItem>
+                    <MenuItem value="Standard">Standard</MenuItem>
+                    <MenuItem value="SaleOrder">SaleOrder</MenuItem>
+                    <MenuItem value="PurchaseOrder">PurchaseOrder</MenuItem>
+                    <MenuItem value="TransferOrder">TransferOrder</MenuItem>
+                    <MenuItem value="ReturnOrder">ReturnOrder</MenuItem>
+                </Select>
+            </FormControl>
+            <FormControl sx={{m: 1, minWidth: 120}} size="small">
+                <InputLabel id="order-customer-select-label">Customer</InputLabel>
+                <Select
+                    labelId="order-customer-select-label"
+                    id="order-customer-simple-select"
+                    value={customer}
+                    label="Customer"
+                    onChange={handleCustomerChange}>
+                    <MenuItem value="nul">All</MenuItem>
+                    {uniqueCustomers.map(name => (
+                        <MenuItem value={`${name}`}>{`${name}`}</MenuItem>
+                    ))}
                 </Select>
             </FormControl>
         </div>
@@ -105,14 +144,23 @@ export default function Home() {
                 {title: "Order ID", field: "Id", editable: "never"},
                 {title: "Creation Date", field: "CreatedDate", editable: "never"},
                 {title: "Created By", field: "CreatedByUserName"},
-                {title: "Order Type", field: "OrderType"},
+                {
+                    title: "Order Type", field: "OrderType", lookup:
+                        {
+                            "nul": "All",
+                            "Standard": "Standard",
+                            "SaleOrder": "SaleOrder",
+                            "PurchaseOrder": "PurchaseOrder",
+                            "TransferOrder": "TransferOrder",
+                            "ReturnOrder": "ReturnOrder"
+                        }
+                },
                 {title: "Customer", field: "CustomerName"},
             ]}
             data={data}
             options={{
                 search: false,
                 paging: false,
-                actionsColumnIndex: -1
             }}
             editable={{
                 onRowUpdate: (newData, oldData) =>

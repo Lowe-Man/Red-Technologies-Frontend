@@ -1,11 +1,42 @@
 import {API_URL, authToken} from "./auth";
 
+export class HttpError extends Error {
+    constructor(public status: number, public message: string) {
+        super(message);
+        this.status = status;
+    }
+}
+
 export async function getAllOrders() {
     const auth = authToken();
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
     myHeaders.append("Authorization", auth);
     const response = await fetch(`${API_URL}/orders`, {
+        method: 'GET',
+        headers: myHeaders,
+        redirect: 'follow'
+    });
+    const result = await response.json();
+    return result.map((order: { CreatedDate: any; Id: any; CreatedByUserName: any; OrderType: any; CustomerName: any; }) => {
+        const date = order.CreatedDate + "Z";
+        const local = new Date(date).toLocaleString();
+        return {
+            Id: order.Id,
+            CreatedDate: local,
+            CreatedByUserName: order.CreatedByUserName,
+            OrderType: order.OrderType,
+            CustomerName: order.CustomerName,
+        }
+    });
+}
+
+export async function searchForOrder(customer: string, orderType: string) {
+    const auth = authToken();
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append("Authorization", auth);
+    const response = await fetch(`${API_URL}/orders/${customer}/${orderType}`, {
         method: 'GET',
         headers: myHeaders,
         redirect: 'follow'
