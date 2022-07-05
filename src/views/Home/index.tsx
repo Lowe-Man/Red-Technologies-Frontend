@@ -18,7 +18,15 @@ import Remove from '@material-ui/icons/Remove';
 import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
-import {createOrder, deleteOrder, getAllOrders, HttpError, searchForOrder, updateOrder} from "../../services/order";
+import {
+    createOrder,
+    deleteOrder,
+    getAllOrders,
+    getOrder,
+    HttpError,
+    searchForOrder,
+    updateOrder
+} from "../../services/order";
 
 const tableIcons: Icons = {
     Add: forwardRef((props, ref) => <AddBox {...props} ref={ref}/>),
@@ -53,7 +61,7 @@ export default function Home() {
         setOrder(event.target.value as string);
     };
 
-    const handleIdChange = (event: SelectChangeEvent) => {
+    const handleIdChange = (event: any) => {
         setId(event.target.value as string);
     };
 
@@ -62,9 +70,18 @@ export default function Home() {
     };
 
     const handleOnSearch = (event: any) => {
-        searchForOrder(customer, order).then(r => {
-            setData(r);
-        })
+        if (id.length === 0) {
+            searchForOrder(customer, order).then(r => {
+                console.log("Search for order: ");
+                setData(r);
+            })
+        } else {
+            getOrder(id).then(r => {
+                console.log("Get Order", id);
+                console.log(r);
+                setData(r);
+            })
+        }
     };
 
 
@@ -117,7 +134,7 @@ export default function Home() {
         <div className="customFormGroup">
             <MDBInputGroup className='mb-3'>
                 <MDBBtn outline onClick={handleOnSearch}>Search</MDBBtn>
-                <MDBInput label='Search by ID' id='formControlIdField' type='text' onBlur={handleIdChange}/>
+                <MDBInput label='Search by ID' id='formControlIdField' type='text' onInput={handleIdChange}/>
             </MDBInputGroup>
             <FormControl sx={{m: 1, minWidth: 120}} size="small">
                 <InputLabel id="order-type-select-label">Order Type</InputLabel>

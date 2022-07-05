@@ -55,31 +55,17 @@ export async function searchForOrder(customer: string, orderType: string) {
     });
 }
 
-export function getOrder(id: number) {
+export async function getOrder(id: string) {
     const myHeaders = new Headers();
     const auth = authToken();
     myHeaders.append("Content-Type", "application/json");
     myHeaders.append("Authorization", auth);
-    return fetch(`${API_URL}/orders/${id}`, {
+    const response = await fetch(`${API_URL}/orders/${id}`, {
         method: 'GET',
         headers: myHeaders,
         redirect: 'follow'
-    })
-        .then(response => response.json())
-        .then(result => {
-            return result.map((order: { CreatedDate: any; Id: any; CreatedByUserName: any; OrderType: any; CustomerName: any; }) => {
-                const date = order.CreatedDate;
-                const local = new Date(date).toLocaleString();
-                return {
-                    Id: order.Id,
-                    CreatedDate: local,
-                    CreatedByUserName: order.CreatedByUserName,
-                    OrderType: order.OrderType,
-                    CustomerName: order.CustomerName,
-                }
-            });
-        })
-        .catch(error => console.log('error', error));
+    });
+    return await response.json();
 }
 
 export async function createOrder(order: object) {
