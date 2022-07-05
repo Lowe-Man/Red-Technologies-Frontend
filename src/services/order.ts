@@ -102,6 +102,8 @@ export function updateOrder(id: number, order: object) {
     const auth = authToken();
     myHeaders.append("Content-Type", "application/json");
     myHeaders.append("Authorization", auth);
+    // @ts-ignore
+    order.CreatedDate = new Date(order.CreatedDate).toISOString();
     const raw = JSON.stringify(order);
     return fetch(`${API_URL}/orders/${id}`, {
         method: 'PUT',
